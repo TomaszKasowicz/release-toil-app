@@ -57,7 +57,7 @@ jobs:
           # This step demonstrates making a change to a file.
           # Replace this with your actual logic to modify files or generate content.
           echo "This file was updated by a GitHub Actions workflow triggered by repository_dispatch at $(date)." >> generated_content.txt
-          echo "Event payload: ${{ github.event }}" >> generated_content.txt
+          echo "Event payload: ${{ toJson(github.event) }}" >> generated_content.txt
 
       - name: Commit changes
         run: |
