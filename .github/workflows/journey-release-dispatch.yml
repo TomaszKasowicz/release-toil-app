@@ -76,7 +76,7 @@ jobs:
           # The token used to create the PR. GITHUB_TOKEN is usually sufficient.
           token: ${{ secrets.PR_PAT_TOKEN }}
           # The branch from which the PR will be created.
-          head: ${{ steps.branch_name.outputs.branch_name }}
+          branch: ${{ steps.branch_name.outputs.branch_name }}
           # The base branch into which the PR will be merged.
           base: main # Or your default branch, e.g., 'master'
           # The title of the pull request.
