@@ -48,8 +48,8 @@ jobs:
           BRANCH_SUFFIX=$(echo "$REPO_FULL_NAME" | sed 's/\//-/g')
           # Construct the full branch name
           BRANCH_NAME="feature/$BRANCH_SUFFIX"
-          echo "Creating branch: $BRANCH_NAME"
-          git checkout -b "$BRANCH_NAME"
+          # echo "Creating branch: $BRANCH_NAME"
+          # git checkout -b "$BRANCH_NAME"
           echo "branch_name=$BRANCH_NAME" >> "$GITHUB_OUTPUT"
 
       - name: Make some changes (example)
