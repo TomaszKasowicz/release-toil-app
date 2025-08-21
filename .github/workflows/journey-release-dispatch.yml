@@ -24,6 +24,14 @@ jobs:
         run: echo "${{ toJson(secrets) }}"
 
 
+  context_dump_scripts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        uses: actions/github-script@v7
+        with:
+          script: |
+            console.log(context)
         
   create_pull_request:
     runs-on: ubuntu-latest
