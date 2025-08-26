@@ -16,7 +16,7 @@ on:
     inputs:
       client_payload: 
         type: string
-        default: '{ "sourceContext": { "repository": "TomaszKasowicz/release-toil-journey", "jiraTicket": "JIRA-12345", "author": "TomaszKasowicz" }, "npmPackages": [ "package1@1.2.3", "package2@1.2.3] }'
+        default: '{ "sourceContext": { "repository": "TomaszKasowicz/release-toil-journey", "jiraTicket": "JIRA-12345", "author": "TomaszKasowicz" }, "npmPackages": [ "package1@1.2.3", "package2@1.2.3"] }'
 
 env:
   CLIENT_PAYLOAD: ${{ github.event_name == 'workflow_dispatch' && inputs.client_payload || github.event.client_payload }}
