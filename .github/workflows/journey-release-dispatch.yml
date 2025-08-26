@@ -78,7 +78,7 @@ jobs:
       - name: Get Repository and Branch Name
         id: get-repository-and-branch-name
         run: |
-          REPOSITORY=$(jq -r '.sourceContext.repository' <<< "${{ env.CLIENT_PAYLOAD }}")
+          REPOSITORY=$(jq -r '.sourceContext.repository' <<< '${{ env.CLIENT_PAYLOAD }}')
           REPO=$(echo "$REPOSITORY" | cut -d '/' -f 2)
           BRANCH_NAME="chore/update-packages-${REPO}"
 
