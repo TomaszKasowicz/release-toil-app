@@ -47,10 +47,11 @@ jobs:
         id: set_payload
         run: |
           if [ "${{ github.event_name }}" == "repository_dispatch" ]; then
-            echo "CLIENT_PAYLOAD=${{ toJson(github.event.client_payload) }}" >> "$GITHUB_ENV"
+            PAYLOAD=${{ toJson(github.event.client_payload) }}
           else
-            echo "CLIENT_PAYLOAD='${{ inputs.client_payload }}'" >> "$GITHUB_ENV"
+            PAYLOAD='${{ inputs.client_payload }}'
           fi
+          echo "CLIENT_PAYLOAD=$PAYLOAD" >> "$GITHUB_ENV"
           echo "TRUNK_BRANCH=${{ github.ref }}" >> "$GITHUB_ENV"
           
       - name: Checkout repo
