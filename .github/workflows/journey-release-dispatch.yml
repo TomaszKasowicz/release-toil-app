@@ -14,11 +14,14 @@ on:
   
   workflow_dispatch:
     inputs:
-      foo:
+      client_payload: 
         type: string
-        required: false
-        default: 'foo'
-        
+        default: '{ "sourceContext": { "repository": "TomaszKasowicz/release-toil-journey", "jiraTicket": "JIRA-12345", "author": "TomaszKasowicz" }, "npmPackages": [ "package1@1.2.3", "package2@1.2.3] }'
+
+env:
+  CLIENT_PAYLOAD: ${{ github.event_name == 'workflow_dispatch' && inputs.client_payload || github.event.client_payload }}
+  TRUNK_BRANCH: ${{ github.event_name == 'workflow_dispatch' && github.ref || github.repository.default_branch }}
+
 jobs:
   context_dump:
     runs-on: ubuntu-latest
@@ -42,37 +45,50 @@ jobs:
         
   create_pull_request:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'repository_dispatch' }}
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.PR_PAT_TOKEN }}
+          fetch-depth: 0
+          ref: ${{ env.TRUNK_BRANCH }}
+          filter: tree:0 # Optional, but recommended: reduce the size of the checkout with tree filtering, see https://github.blog/open-source/git/get-up-to-speed-with-partial-clone-and-shallow-clone/
+
+      - name: Run Github Script (testing payload from dispatch)
+        uses: actions/github-script@v7
+        env:
+          CLIENT_PAYLOAD: ${{ env.CLIENT_PAYLOAD }}
+        with:
+          script: |
+             try {
+               const client_payload = JSON.parse(process.env.CLIENT_PAYLOAD) || {};
+               console.log('----Client Payload', JSON.stringify(client_payload, null, 2));
+             } catch(err) {
+               console.log('***** error', error.message);
+             }
           
-      - name: Configure Git
+      - name: Get Repository and Branch Name
+        if: ${{ steps.cross-check-dependencies.outputs.updated }}
+        id: get-repository-and-branch-name
         run: |
-          git config user.name "GitHub Actions Bot"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          REPOSITORY=$(echo '${{ env.CLIENT_PAYLOAD }}' | jq -r '.sourceContext.repository')
+          REPO=$(echo $REPOSITORY | cut -d '/' -f 2)
+          BRANCH_NAME="chore/update-packages-${REPO}"
+          echo "REPOSITORY=$REPOSITORY" >> $GITHUB_ENV
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
-      - name: Create a new branch
-        id: branch_name
-        run: |
-          # Get the full repository name (e.g., 'owner/repo-name')
-          REPO_FULL_NAME="${{ github.event.client_payload.repository }}"
-          # Replace '/' with '-' for the branch name part
-          BRANCH_SUFFIX=$(echo "$REPO_FULL_NAME" | sed 's/\//-/g')
-          # Construct the full branch name
-          BRANCH_NAME="feature/$BRANCH_SUFFIX"
-          # echo "Creating branch: $BRANCH_NAME"
-          # git checkout -b "$BRANCH_NAME"
-          echo "branch_name=$BRANCH_NAME" >> "$GITHUB_OUTPUT"
+      # - name: Configure Git
+      #   run: |
+      #     git config user.name "GitHub Actions Bot"
+      #     git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Make some changes (example)
-        run: |
-          # This step demonstrates making a change to a file.
-          # Replace this with your actual logic to modify files or generate content.
-          echo "This file was updated by a GitHub Actions workflow triggered by repository_dispatch at $(date)." >> generated_content.txt
-          echo "Event payload: ${{ toJson(github.event) }}" >> generated_content.txt
+      # - name: Make some changes (example)
+      #   run: |
+      #     # This step demonstrates making a change to a file.
+      #     # Replace this with your actual logic to modify files or generate content.
+      #     echo "This file was updated by a GitHub Actions workflow triggered by repository_dispatch at $(date)." >> generated_content.txt
+      #     echo "Event payload: ${{ toJson(github.event) }}" >> generated_content.txt
+
+      #     git checkout ${{ env.BRANCH_NAME }} || git checkout -b ${{ env.BRANCH_NAME }}
 
       # - name: Commit changes
       #   run: |
