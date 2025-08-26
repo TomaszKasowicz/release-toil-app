@@ -50,7 +50,9 @@ jobs:
         if: github.event_name == 'workflow_dispatch'
         run: |
           # Pass the JSON string directly without extra quotes to preserve the internal structure.
-          echo "CLIENT_PAYLOAD=${{ inputs.client_payload }}" >> $GITHUB_ENV
+          echo "CLIENT_PAYLOAD<<EOF" >> $GITHUB_ENV
+          echo "${{ inputs.client_payload }}" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
           echo "TRUNK_BRANCH=${{ github.ref }}" >> $GITHUB_ENV
           
       - name: Checkout repo
