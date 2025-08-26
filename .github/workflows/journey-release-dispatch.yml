@@ -51,7 +51,7 @@ jobs:
           else
             echo "CLIENT_PAYLOAD='${{ inputs.client_payload }}'" >> "$GITHUB_ENV"
           fi
-          echo "TRUNK_BRANCH=${{ github.ref }}" >> "$GUTHUB_ENV"
+          echo "TRUNK_BRANCH=${{ github.ref }}" >> "$GITHUB_ENV"
           
       - name: Checkout repo
         uses: actions/checkout@v4
