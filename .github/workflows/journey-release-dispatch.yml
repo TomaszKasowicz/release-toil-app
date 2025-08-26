@@ -62,7 +62,7 @@ jobs:
              try {
                const client_payload = JSON.parse(process.env.CLIENT_PAYLOAD) || {};
                console.log('----Client Payload', JSON.stringify(client_payload, null, 2));
-             } catch(err) {
+             } catch(error) {
                console.log('***** error', error.message);
              }
           
