@@ -48,8 +48,9 @@ jobs:
       - name: Override env variables (workflow dispatch)
         if: github.event_name == 'workflow_dispatch'
         run: |
+          # Mind the single quotes (use them for JSON but DO NOT USE THEM FOR STRINGS)
           echo "CLIENT_PAYLOAD='${{ inputs.client_payload }}'" >> $GITHUB_ENV
-          echo "TRUNK_BRANCH='${{ github.ref }}'" >> $GITHUB_ENV
+          echo "TRUNK_BRANCH=${{ github.ref }}" >> $GITHUB_ENV
           
       - name: Checkout repo
         uses: actions/checkout@v4
