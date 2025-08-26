@@ -41,18 +41,17 @@ jobs:
         
   create_pull_request:
     runs-on: ubuntu-latest
-    env:
-      CLIENT_PAYLOAD: ${{ github.event.client_payload }}
-      TRUNK_BRANCH: ${{ github.repository.default_branch }}
     steps:
-      - name: Override env variables (workflow dispatch)
         # This step correctly sets the environment variables for a workflow_dispatch event.
-        if: github.event_name == 'workflow_dispatch'
+      - name: '⚙️ Set payload environment variable'
+        id: set_payload
         run: |
-          # Pass the JSON string directly without extra quotes to preserve the internal structure.
-          CLIENT_PAYLOAD_JSON=$(echo '${{ toJSON(inputs.client_payload) }}' | jq -c .)
-          echo "CLIENT_PAYLOAD=$CLIENT_PAYLOAD_JSON" >> $GITHUB_ENV
-          echo "TRUNK_BRANCH=${{ github.ref }}" >> $GITHUB_ENV
+          if [ "${{ github.event_name }}" == "repository_dispatch" ]; then
+            echo "CLIENT_PAYLOAD=${{ toJson(github.event.client_payload) }}" >> "$GITHUB_ENV"
+          else
+            echo "CLIENT_PAYLOAD=${{ inputs.client_payload }}" >> "$GITHUB_ENV"
+          fi
+          echo "TRUNK_BRANCH=${{ github.ref }}" >> "$GUTHUB_ENV"
           
       - name: Checkout repo
         uses: actions/checkout@v4
