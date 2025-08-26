@@ -46,9 +46,10 @@ jobs:
       TRUNK_BRANCH: ${{ github.repository.default_branch }}
     steps:
       - name: Override env variables (workflow dispatch)
+        # This step correctly sets the environment variables for a workflow_dispatch event.
         if: github.event_name == 'workflow_dispatch'
         run: |
-          # Mind the single quotes (use them for JSON but DO NOT USE THEM FOR STRINGS)
+          # Pass the JSON string directly without extra quotes to preserve the internal structure.
           echo "CLIENT_PAYLOAD=${{ inputs.client_payload }}" >> $GITHUB_ENV
           echo "TRUNK_BRANCH=${{ github.ref }}" >> $GITHUB_ENV
           
@@ -61,24 +62,28 @@ jobs:
 
       - name: Run Github Script (testing payload from dispatch)
         uses: actions/github-script@v7
-        env:
-          CLIENT_PAYLOAD: ${{ env.CLIENT_PAYLOAD }}
+        # The CLIENT_PAYLOAD environment variable is already set at the job level or overridden above.
+        # No need to declare it again here.
         with:
           script: |
-             try {
-               const client_payload = JSON.parse(process.env.CLIENT_PAYLOAD) || {};
-               console.log('----Client Payload', JSON.stringify(client_payload, null, 2));
-             } catch(error) {
-               console.log('***** error', error.message);
-             }
+            try {
+              // The JSON.parse will now work because the string is valid JSON.
+              const client_payload = JSON.parse(process.env.CLIENT_PAYLOAD) || {};
+              console.log('----Client Payload', JSON.stringify(client_payload, null, 2));
+            } catch(error) {
+              console.log('***** error', error.message);
+            }
           
       - name: Get Repository and Branch Name
-        if: ${{ steps.cross-check-dependencies.outputs.updated }}
         id: get-repository-and-branch-name
         run: |
-          REPOSITORY=$(echo '${{ env.CLIENT_PAYLOAD }}' | jq -r '.sourceContext.repository')
-          REPO=$(echo $REPOSITORY | cut -d '/' -f 2)
+          REPOSITORY=$(jq -r '.sourceContext.repository' <<< "${{ env.CLIENT_PAYLOAD }}")
+          REPO=$(echo "$REPOSITORY" | cut -d '/' -f 2)
           BRANCH_NAME="chore/update-packages-${REPO}"
+
+          echo "$REPOSITORY"
+          echo "$BRANCH_NAME"
+          
           echo "REPOSITORY=$REPOSITORY" >> $GITHUB_ENV
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
