@@ -1,0 +1,164 @@
+name: Conditional Environment Variables Examples
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'development'
+        type: choice
+        options:
+        - development
+        - staging
+        - production
+      feature_flag:
+        description: 'Enable feature flag'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  # Example 1: Using conditional expressions in env values
+  conditional_expressions:
+    runs-on: ubuntu-latest
+    env:
+      # Conditional environment variables using ternary-like expressions
+      DATABASE_URL: ${{ inputs.environment == 'production' && 'prod-db-url' || inputs.environment == 'staging' && 'staging-db-url' || 'dev-db-url' }}
+      API_ENDPOINT: ${{ inputs.environment == 'production' && 'https://api.prod.example.com' || 'https://api.dev.example.com' }}
+      DEBUG_MODE: ${{ inputs.environment != 'production' }}
+      FEATURE_ENABLED: ${{ inputs.feature_flag }}
+      
+    steps:
+      - name: Display environment variables
+        run: |
+          echo "Environment: ${{ inputs.environment }}"
+          echo "Database URL: $DATABASE_URL"
+          echo "API Endpoint: $API_ENDPOINT"
+          echo "Debug Mode: $DEBUG_MODE"
+          echo "Feature Enabled: $FEATURE_ENABLED"
+
+  # Example 2: Using step-level conditions to set environment variables
+  step_level_conditions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set production environment variables
+        if: inputs.environment == 'production'
+        run: |
+          echo "DATABASE_URL=prod-database.example.com" >> $GITHUB_ENV
+          echo "LOG_LEVEL=error" >> $GITHUB_ENV
+          echo "CACHE_TTL=3600" >> $GITHUB_ENV
+          
+      - name: Set staging environment variables  
+        if: inputs.environment == 'staging'
+        run: |
+          echo "DATABASE_URL=staging-database.example.com" >> $GITHUB_ENV
+          echo "LOG_LEVEL=warn" >> $GITHUB_ENV
+          echo "CACHE_TTL=1800" >> $GITHUB_ENV
+          
+      - name: Set development environment variables
+        if: inputs.environment == 'development'
+        run: |
+          echo "DATABASE_URL=dev-database.example.com" >> $GITHUB_ENV
+          echo "LOG_LEVEL=debug" >> $GITHUB_ENV
+          echo "CACHE_TTL=300" >> $GITHUB_ENV
+          
+      - name: Set feature flag variables
+        if: inputs.feature_flag
+        run: |
+          echo "EXPERIMENTAL_FEATURES=true" >> $GITHUB_ENV
+          echo "BETA_ENDPOINTS=enabled" >> $GITHUB_ENV
+          
+      - name: Display dynamically set environment variables
+        run: |
+          echo "Database URL: $DATABASE_URL"
+          echo "Log Level: $LOG_LEVEL"
+          echo "Cache TTL: $CACHE_TTL"
+          echo "Experimental Features: $EXPERIMENTAL_FEATURES"
+          echo "Beta Endpoints: $BETA_ENDPOINTS"
+
+  # Example 3: Using matrix strategy for conditional environments
+  matrix_conditional:
+    strategy:
+      matrix:
+        environment: [development, staging, production]
+        include:
+          - environment: development
+            database_url: dev-db.example.com
+            log_level: debug
+            replicas: 1
+          - environment: staging  
+            database_url: staging-db.example.com
+            log_level: info
+            replicas: 2
+          - environment: production
+            database_url: prod-db.example.com
+            log_level: error
+            replicas: 5
+            
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ matrix.database_url }}
+      LOG_LEVEL: ${{ matrix.log_level }}
+      REPLICAS: ${{ matrix.replicas }}
+      
+    steps:
+      - name: Display matrix-based environment variables
+        run: |
+          echo "Environment: ${{ matrix.environment }}"
+          echo "Database URL: $DATABASE_URL"
+          echo "Log Level: $LOG_LEVEL"
+          echo "Replicas: $REPLICAS"
+
+  # Example 4: Complex conditional logic using JSON and fromJSON
+  complex_conditional:
+    runs-on: ubuntu-latest
+    env:
+      # Using fromJSON to handle complex conditional configurations
+      CONFIG: ${{ fromJSON('{"development":{"api":"https://dev-api.com","timeout":30},"staging":{"api":"https://staging-api.com","timeout":60},"production":{"api":"https://prod-api.com","timeout":120}}')[inputs.environment] }}
+      
+    steps:
+      - name: Set complex configuration
+        run: |
+          echo "API_URL=${{ fromJSON(env.CONFIG).api }}" >> $GITHUB_ENV
+          echo "TIMEOUT=${{ fromJSON(env.CONFIG).timeout }}" >> $GITHUB_ENV
+          
+      - name: Display complex configuration
+        run: |
+          echo "Environment: ${{ inputs.environment }}"
+          echo "API URL: $API_URL"
+          echo "Timeout: $TIMEOUT"
+
+  # Example 5: Conditional environment variables based on git ref
+  git_ref_conditional:
+    runs-on: ubuntu-latest
+    env:
+      # Conditional variables based on git reference
+      DEPLOY_ENV: ${{ startsWith(github.ref, 'refs/heads/main') && 'production' || startsWith(github.ref, 'refs/heads/staging') && 'staging' || 'development' }}
+      BUILD_TYPE: ${{ github.ref == 'refs/heads/main' && 'release' || 'debug' }}
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Display git-based environment variables
+        run: |
+          echo "Git Ref: ${{ github.ref }}"
+          echo "Deploy Environment: $DEPLOY_ENV"
+          echo "Build Type: $BUILD_TYPE"
+
+  # Example 6: Conditional secrets usage
+  conditional_secrets:
+    runs-on: ubuntu-latest
+    env:
+      # Only set API key for production environment
+      API_KEY: ${{ inputs.environment == 'production' && secrets.PROD_API_KEY || '' }}
+      
+    steps:
+      - name: Use conditional secrets
+        run: |
+          if [ -n "$API_KEY" ]; then
+            echo "API key is configured for production"
+          else
+            echo "No API key configured for non-production environment"
+          fi

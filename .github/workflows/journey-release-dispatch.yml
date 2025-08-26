@@ -44,12 +44,26 @@ jobs:
     env:
       CLIENT_PAYLOAD: ${{ github.event.client_payload }}
       TRUNK_BRANCH: ${{ github.repository.default_branch }}
+      # Example: Conditional environment variables using expressions
+      IS_WORKFLOW_DISPATCH: ${{ github.event_name == 'workflow_dispatch' }}
+      EVENT_TYPE: ${{ github.event_name == 'workflow_dispatch' && 'manual' || 'automated' }}
+      # Conditional branch naming based on event type
+      BRANCH_PREFIX: ${{ github.event_name == 'workflow_dispatch' && 'manual' || 'auto' }}
     steps:
       - name: Override env variables (workflow dispatch)
         if: github.event_name == 'workflow_dispatch'
         run: |
           echo "CLIENT_PAYLOAD='${{ inputs.client_payload }}'" >> $GITHUB_ENV
           echo "TRUNK_BRANCH='${{ github.ref }}'" >> $GITHUB_ENV
+          # Example: Setting additional conditional environment variables
+          echo "TRIGGER_SOURCE=manual" >> $GITHUB_ENV
+          echo "PRIORITY=high" >> $GITHUB_ENV
+          
+      - name: Set repository dispatch specific variables
+        if: github.event_name == 'repository_dispatch'
+        run: |
+          echo "TRIGGER_SOURCE=external" >> $GITHUB_ENV
+          echo "PRIORITY=normal" >> $GITHUB_ENV
           
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -77,9 +91,13 @@ jobs:
         run: |
           REPOSITORY=$(echo '${{ env.CLIENT_PAYLOAD }}' | jq -r '.sourceContext.repository')
           REPO=$(echo $REPOSITORY | cut -d '/' -f 2)
-          BRANCH_NAME="chore/update-packages-${REPO}"
+          # Use conditional branch prefix from environment variable
+          BRANCH_NAME="${{ env.BRANCH_PREFIX }}/update-packages-${REPO}"
           echo "REPOSITORY=$REPOSITORY" >> $GITHUB_ENV
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+          echo "Event type: ${{ env.EVENT_TYPE }}" 
+          echo "Trigger source: ${{ env.TRIGGER_SOURCE }}"
+          echo "Priority: ${{ env.PRIORITY }}"
 
       # - name: Configure Git
       #   run: |

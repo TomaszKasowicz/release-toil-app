@@ -1,0 +1,70 @@
+name: Test Conditional Environment Variables
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_environment:
+        description: 'Test environment'
+        required: true
+        default: 'development'
+        type: choice
+        options:
+        - development
+        - production
+
+jobs:
+  test_conditional_env:
+    runs-on: ubuntu-latest
+    env:
+      # Test conditional expressions
+      TEST_DATABASE: ${{ inputs.test_environment == 'production' && 'prod-db.example.com' || 'dev-db.example.com' }}
+      TEST_DEBUG: ${{ inputs.test_environment != 'production' }}
+      TEST_LOG_LEVEL: ${{ inputs.test_environment == 'production' && 'error' || 'debug' }}
+      
+    steps:
+      - name: Display environment variables set via conditional expressions
+        run: |
+          echo "=== Environment Variables Set via Conditional Expressions ==="
+          echo "Selected Environment: ${{ inputs.test_environment }}"
+          echo "Database: $TEST_DATABASE"
+          echo "Debug Mode: $TEST_DEBUG"
+          echo "Log Level: $TEST_LOG_LEVEL"
+          echo ""
+          
+      - name: Set additional variables conditionally via steps
+        if: inputs.test_environment == 'production'
+        run: |
+          echo "PRODUCTION_SPECIFIC=true" >> $GITHUB_ENV
+          echo "MONITORING_ENABLED=true" >> $GITHUB_ENV
+          
+      - name: Set development variables
+        if: inputs.test_environment == 'development'  
+        run: |
+          echo "DEV_TOOLS_ENABLED=true" >> $GITHUB_ENV
+          echo "HOT_RELOAD=true" >> $GITHUB_ENV
+          
+      - name: Display step-conditional variables
+        run: |
+          echo "=== Environment Variables Set via Step Conditions ==="
+          echo "Production Specific: $PRODUCTION_SPECIFIC"
+          echo "Monitoring Enabled: $MONITORING_ENABLED"  
+          echo "Dev Tools Enabled: $DEV_TOOLS_ENABLED"
+          echo "Hot Reload: $HOT_RELOAD"
+          echo ""
+          
+      - name: Test conditional secret usage (simulated)
+        run: |
+          echo "=== Conditional Secret Usage ==="
+          if [ "${{ inputs.test_environment }}" == "production" ]; then
+            echo "Would use production secrets here"
+          else
+            echo "Using development/mock credentials"
+          fi
+          
+      - name: Summary
+        run: |
+          echo "=== Summary ==="
+          echo "Successfully demonstrated conditional environment variables using:"
+          echo "1. Conditional expressions in job-level env block"
+          echo "2. Step-level conditional variable setting"
+          echo "3. Conditional logic in script steps"
