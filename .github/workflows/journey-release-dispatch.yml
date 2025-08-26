@@ -19,8 +19,8 @@ on:
         default: '{ "sourceContext": { "repository": "TomaszKasowicz/release-toil-journey", "jiraTicket": "JIRA-12345", "author": "TomaszKasowicz" }, "npmPackages": [ "package1@1.2.3", "package2@1.2.3"] }'
 
 env:
-  CLIENT_PAYLOAD: ${{ github.event_name == 'workflow_dispatch' && inputs.client_payload || github.event.client_payload }}
-  TRUNK_BRANCH: ${{ github.event_name == 'workflow_dispatch' && github.ref || github.repository.default_branch }}
+  CLIENT_PAYLOAD: ${{ github.event.client_payload }}
+  TRUNK_BRANCH: ${{ github.repository.default_branch }}
 
 jobs:
   context_dump:
@@ -46,6 +46,12 @@ jobs:
   create_pull_request:
     runs-on: ubuntu-latest
     steps:
+      - name: Override env variables (workflow dispatch)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          echo "CLIENT_PAYLOAD=${{ inputs.client_payload }}" >> $GITHUB_ENV
+          echo "TRUNK_BRANCH=${{ github.ref }}" >> $GITHUB_ENV
+          
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
