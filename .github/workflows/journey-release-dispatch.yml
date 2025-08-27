@@ -47,7 +47,7 @@ jobs:
         id: set_payload
         run: |
           if [ "${{ github.event_name }}" == "repository_dispatch" ]; then
-            PAYLOAD="${{ fromJSON(github.event.client_payload) }}"
+            PAYLOAD=$( echo '${{ toJSON(github.event.client_payload) }}' | jq -c)
           else
             PAYLOAD='${{ inputs.client_payload }}'
           fi
