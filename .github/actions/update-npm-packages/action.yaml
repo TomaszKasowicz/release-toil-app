@@ -1,0 +1,16 @@
+name: "Update NPM Packages"
+description: "Update NPM Packages"
+inputs:
+  repo:
+    required: true
+    description: "Repository name (e.g., backbase-rnd/code-stats)"
+# outputs:
+#   ai_labels_string:
+#     description: "Assigned AI labels as a comma-separated string"
+#     value: ${{ steps.set_outputs.outputs.ai_labels_string }}
+runs:
+  using: 'composite'
+  steps:
+    - name: Debug
+      run: |
+        echo "github.action_path: ${{ github.action_path }}"
