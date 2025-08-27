@@ -16,3 +16,14 @@ runs:
         echo "github.action_path: ${{ github.action_path }}"
         echo "--------------------------------"
         ls -la ${{ github.action_path }}
+    - name: Try to run js script
+      uses: actions/github-script@v7
+      with:
+        script: |
+          try {
+          const script = require('${{ github.action_path }}/test.js');
+          await script({github, context});
+          
+          } catch (error) {
+            console.error(error);
+          }
