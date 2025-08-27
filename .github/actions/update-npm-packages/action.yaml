@@ -14,3 +14,5 @@ runs:
     - name: Debug
       run: |
         echo "github.action_path: ${{ github.action_path }}"
+        echo "--------------------------------"
+        ls -la ${{ github.action_path }}
