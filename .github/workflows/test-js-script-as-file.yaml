@@ -8,4 +8,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run JS Script as File inside github script action
-        uses: TomaszKasowicz/update-npm-packages@main
+        uses: TomaszKasowicz/release-toil-app/.github/actions/update-npm-packages@main
