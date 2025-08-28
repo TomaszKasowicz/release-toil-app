@@ -2,6 +2,7 @@
   "name": "release-toil-app",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -18,6 +19,11 @@
   },
   "homepage": "https://github.com/TomaszKasowicz/release-toil-app#readme",
   "devDependencies": {
-    "@actions/github-script": "github:actions/github-script"
+    "@actions/github-script": "github:actions/github-script",
+    "dotenv": "^17.2.1",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "@octokit/rest": "^22.0.0"
   }
 }
