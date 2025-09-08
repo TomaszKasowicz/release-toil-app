@@ -15,5 +15,5 @@ jobs:
               "line 2",
               "line 3"
             ];
-            console.log(`::warning ::${warning.join('%0A')}`);
+            console.log(`::warning ::${warning.join('\n')}`);
             
