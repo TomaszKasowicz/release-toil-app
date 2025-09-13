@@ -7,7 +7,11 @@ on:
     types: [closed]
     branches:
       - 'main'
-
+      
+permissions:
+  actions: read
+  contents: read
+  
 jobs:
   deploy:
     # This condition ensures the job only runs if the PR was actually merged
