@@ -14,6 +14,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: build
+      shell: bash
+      run: |
+        mkdir -p dist
+        echo "build" >> dist/build.txt
+
+    - name: upload
+      uses: actions/upload-artifact@v4
+      with:
+        path: dist/
+        name: build-${{ github.sha }}
+
+
     # - name: Use Node.js ${{ matrix.node-version }}
     #   uses: actions/setup-node@v4
     #   with:
