@@ -14,7 +14,8 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-      - name: Debug: Print the original and merge commit SHAs
+      - name: "Debug: Print the original and merge commit SHAs"
+        shell: bash
         run: |
           echo "PR Head SHA (used for artifact name): ${{ github.event.pull_request.head.sha }}"
           echo "Merge Commit SHA (the new squashed commit): ${{ github.event.pull_request.merge_commit_sha }}"
