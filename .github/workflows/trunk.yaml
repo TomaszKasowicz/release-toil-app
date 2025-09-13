@@ -1,0 +1,38 @@
+# .github/workflows/deploy-main.yml
+name: Deploy to Production
+
+# This trigger is key! It runs ONLY when a PR is merged into main.
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - 'main' # <-- Change to your trunk branch name if different
+
+jobs:
+  deploy:
+    # This condition ensures the job only runs if the PR was actually merged.
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          # Use the PR's head SHA to find the artifact uploaded in the PR workflow
+          name: build-${{ github.event.pull_request.head.sha }}
+          # The local path where the artifact will be downloaded
+          path: ./dist # <-- IMPORTANT: Should match the path you uploaded from
+
+      - name: Verify downloaded files
+        run: |
+          echo "Files in the downloaded build directory:"
+          ls -R ./dist
+
+      - name: Deploy
+        # Your deployment commands go here.
+        # They can now use the contents of the './dist' directory.
+        run: |
+          echo "Deploying the contents of ./dist..."
+          # Example: aws s3 sync ./dist s3://my-bucket
