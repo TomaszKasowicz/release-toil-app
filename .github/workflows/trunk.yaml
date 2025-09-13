@@ -1,38 +1,29 @@
 # .github/workflows/deploy-main.yml
 name: Deploy to Production
 
-# This trigger is key! It runs ONLY when a PR is merged into main.
+# THIS IS THE CORRECT TRIGGER
 on:
   pull_request:
     types: [closed]
     branches:
-      - 'main' # <-- Change to your trunk branch name if different
+      - 'main'
 
 jobs:
   deploy:
-    # This condition ensures the job only runs if the PR was actually merged.
+    # This condition ensures the job only runs if the PR was actually merged
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Debug: Print the original and merge commit SHAs
+        run: |
+          echo "PR Head SHA (used for artifact name): ${{ github.event.pull_request.head.sha }}"
+          echo "Merge Commit SHA (the new squashed commit): ${{ github.event.pull_request.merge_commit_sha }}"
 
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
-          # Use the PR's head SHA to find the artifact uploaded in the PR workflow
+          # This correctly uses the original head SHA ('a1b2c3d4') to find the artifact
           name: build-${{ github.event.pull_request.head.sha }}
-          # The local path where the artifact will be downloaded
-          path: ./dist # <-- IMPORTANT: Should match the path you uploaded from
+          path: ./dist
 
-      - name: Verify downloaded files
-        run: |
-          echo "Files in the downloaded build directory:"
-          ls -R ./dist
-
-      - name: Deploy
-        # Your deployment commands go here.
-        # They can now use the contents of the './dist' directory.
-        run: |
-          echo "Deploying the contents of ./dist..."
-          # Example: aws s3 sync ./dist s3://my-bucket
+      # ... your deployment steps ...
