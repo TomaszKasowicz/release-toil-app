@@ -23,7 +23,7 @@ jobs:
         run: |
           echo "PR Head SHA (used for artifact name): ${{ github.event.pull_request.head.sha }}"
           echo "Merge Commit SHA (the new squashed commit): ${{ github.event.pull_request.merge_commit_sha }}"
-          echo 'PR Head info ${{ toJSON(github.event.pull_request.head) }}'
+          echo 'PR Head info ${{ toJSON(github.event.pull_request) }}'
 
       - name: Get Run ID
         id: get-run-id
@@ -38,7 +38,7 @@ jobs:
             --limit 1 \
             --json "databaseId" \
             --jq ".[0].databaseId" \
-            --repo "${{ github.event.pull_request.repo.full_name }}"
+            --repo "${{ github.event.pull_request.repository.full_name }}"
             --branch "${{ github.event.pull_request.head.ref }}" \
             --commit "${{ github.event.pull_request.head.sha }}")
 
