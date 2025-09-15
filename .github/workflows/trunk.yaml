@@ -28,6 +28,8 @@ jobs:
       - name: Get Run ID
         id: get-run-id
         shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "=== Fetching Run ID for PR ${{ github.event.pull_request.number }}"
           run_id=$(gh run list \
