@@ -30,7 +30,7 @@ jobs:
         shell: bash
         run: |
           echo "=== Fetching Run ID for PR ${{ github.event.pull_request.number }}"
-          run_id = $(gh run list \
+          run_id=$(gh run list \
             --workflow "ci-pr.yml" \ 
             --status "success" \
             --limit 1 \
@@ -40,7 +40,7 @@ jobs:
             --commit "${{ github.event.pull_request.head.sha }}")
 
           echo "run_id=${run_id}"
-          echo "run_id=${run_id" >> $GITHUB_OUTPUT
+          echo "run_id=${run_id}" >> $GITHUB_OUTPUT
 
         
             
