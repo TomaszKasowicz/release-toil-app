@@ -23,12 +23,33 @@ jobs:
         run: |
           echo "PR Head SHA (used for artifact name): ${{ github.event.pull_request.head.sha }}"
           echo "Merge Commit SHA (the new squashed commit): ${{ github.event.pull_request.merge_commit_sha }}"
+          echo 'PR Head info ${{ toJSON(github.event.pull_request.head) }}'
 
+      - name: Get Run ID
+        id: get-run-id
+        shell: bash
+        run: |
+          echo "=== Fetching Run ID for PR ${{ github.event.pull_request.number }}"
+          run_id = $(gh run list \
+            --workflow "ci-pr.yml" \ 
+            --status "success" \
+            --limit 1 \
+            --json "databsaseId" \
+            --jq ".[0].databaseId" \
+            --branch "${{ github.event.pull_request.head.ref }}" \
+            --commit "${{ github.event.pull_request.head.sha }}")
+
+          echo "run_id=${run_id}"
+          echo "run_id=${run_id" >> $GITHUB_OUTPUT
+
+        
+            
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
           # This correctly uses the original head SHA ('a1b2c3d4') to find the artifact
           name: build-${{ github.event.pull_request.head.sha }}
           path: ./dist
+          run-id: ${{ steps.get-run-id.outputs.run_id }}
 
       # ... your deployment steps ...
