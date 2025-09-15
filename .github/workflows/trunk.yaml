@@ -31,7 +31,7 @@ jobs:
         run: |
           echo "=== Fetching Run ID for PR ${{ github.event.pull_request.number }}"
           run_id=$(gh run list \
-            --workflow "ci-pr.yml" \ 
+            --workflow "ci-pr.yml" \
             --status "success" \
             --limit 1 \
             --json "databsaseId" \
