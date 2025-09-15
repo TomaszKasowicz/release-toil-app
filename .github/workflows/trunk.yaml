@@ -36,7 +36,7 @@ jobs:
             --workflow "ci-pr.yml" \
             --status "success" \
             --limit 1 \
-            --json "databsaseId" \
+            --json "databaseId" \
             --jq ".[0].databaseId" \
             --branch "${{ github.event.pull_request.head.ref }}" \
             --commit "${{ github.event.pull_request.head.sha }}")
