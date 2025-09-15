@@ -38,6 +38,7 @@ jobs:
             --limit 1 \
             --json "databaseId" \
             --jq ".[0].databaseId" \
+            --repo "${{ github.event.pull_request.repo.full_name }}"
             --branch "${{ github.event.pull_request.head.ref }}" \
             --commit "${{ github.event.pull_request.head.sha }}")
 
