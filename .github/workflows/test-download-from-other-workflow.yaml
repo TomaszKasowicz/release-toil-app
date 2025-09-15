@@ -1,0 +1,21 @@
+on:
+  workflow_dispatch:
+    inputs:
+      run-id:
+        type: string
+        required: true
+        default: '17726817747'
+      name:
+        type: string
+        required: false
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ inputs.run-id }}
+      - shell: bash
+        run: ls -al
