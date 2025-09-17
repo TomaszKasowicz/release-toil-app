@@ -12,6 +12,7 @@ runs:
   using: 'composite'
   steps:
     - name: Debug
+      shell: bash
       run: |
         echo "github.action_path: ${{ github.action_path }}"
         echo "--------------------------------"
