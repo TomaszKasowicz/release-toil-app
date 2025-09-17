@@ -6,16 +6,16 @@ on:
 
 jobs:
   show-context:
-  runs-on: ubuntu-latest
-  steps:
-    - run: printenv | sort
-      shell: bash
-
-    - uses: actions/github-script@v5
-      with:
-        script: |
-           console.log('==========');
-           console.log(JSON.stringify(context, null, 2));
-           console.log('==========');
+    runs-on: ubuntu-latest
+    steps:
+      - run: printenv | sort
+        shell: bash
+  
+      - uses: actions/github-script@v5
+        with:
+          script: |
+             console.log('==========');
+             console.log(JSON.stringify(context, null, 2));
+             console.log('==========');
 
     
