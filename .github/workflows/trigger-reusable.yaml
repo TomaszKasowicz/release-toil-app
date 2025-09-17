@@ -5,4 +5,4 @@ on:
 
 jobs:
   trigger:
-    uses: TomaszKasowicz/release-toil-app/.github/worfklows/reusable.yaml@main
+    uses: TomaszKasowicz/release-toil-app/.github/workflows/reusable.yaml@main
