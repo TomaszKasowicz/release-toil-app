@@ -1,0 +1,8 @@
+name: Trigger reusable
+
+on:
+  workflow_dispatch:
+
+jobs:
+  trigger:
+    uses: TomaszKasowicz/release-toil-app/.github/worfklows/reusable.yaml@main
