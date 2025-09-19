@@ -10,6 +10,6 @@ jobs:
       - run: echo '${{ toJSON(github) }}'
       
   trigger:
-    uses: .github/workflows/reusable.yaml
+    uses: ./.github/workflows/reusable.yaml
     with:
       dry_run: true
