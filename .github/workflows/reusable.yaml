@@ -16,6 +16,15 @@ jobs:
   show-context:
     runs-on: ubuntu-latest
     steps:
+      - uses: docker/metadata@v5
+        with:
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=tag
+            type=ref,event=pr
+        env:
+          DOCKER_METADATA_PR_HEAD_SHA: true
       - run: printenv | sort
         shell: bash
   
