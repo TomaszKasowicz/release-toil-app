@@ -8,7 +8,7 @@ on:
         required: true
 
 env:
-  SOME_ENV: ${{ inputs.dry_run && 'dry' || 'prod }}
+  SOME_ENV: ${{ inputs.dry_run && 'dry' || 'prod' }}
 
 jobs:
   show-context:
