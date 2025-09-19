@@ -11,3 +11,5 @@ jobs:
       
   trigger:
     uses: TomaszKasowicz/release-toil-app/.github/workflows/reusable.yaml@main
+    with:
+      dry_run: true
