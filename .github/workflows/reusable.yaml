@@ -10,7 +10,7 @@ on:
 env:
   FOO: "foo"
   BAR: "bar"
-  SOME_ENV: ${{ inputs.dry_run && env.FOO || env.BAR }}
+  SOME_ENV: ${{ inputs.dry_run && 'foo' || 'bar' }}
 
 jobs:
   show-context:
