@@ -16,8 +16,9 @@ jobs:
   show-context:
     runs-on: ubuntu-latest
     steps:
-      - uses: docker/metadata@v5
+      - uses: docker/metadata-action@v5
         with:
+          images: backbaseregistry.azurecr.io/business-usa
           tags: |
             type=schedule
             type=ref,event=branch
