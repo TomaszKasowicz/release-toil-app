@@ -12,4 +12,4 @@ jobs:
   trigger:
     uses: ./.github/workflows/reusable.yaml
     with:
-      dry_run: true
+      dry_run: false
