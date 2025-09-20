@@ -28,6 +28,9 @@ jobs:
           type=ref,event=branch
           type=ref,event=tag
           type=ref,event=pr
+          type=sha
+        flavors: |
+          suffix={{date 'YYYYMMDD-HHmmss'}}
       env:
         DOCKER_METADATA_PR_HEAD_SHA: true
     - name: upload
