@@ -29,7 +29,7 @@ jobs:
           type=ref,event=tag
           type=ref,event=pr
           type=sha
-        flavors: |
+        flavor: |
           suffix={{date 'YYYYMMDD-HHmmss'}}
       env:
         DOCKER_METADATA_PR_HEAD_SHA: true
