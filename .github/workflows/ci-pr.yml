@@ -24,14 +24,7 @@ jobs:
       with:
         images: backbaseregistry.azurecr.io/business-usa
         tags: |
-          type=schedule
-          type=ref,event=branch
-          type=ref,event=tag
-          type=ref,event=pr
-          type=sha,prefix=2025.10-
-          type=raw,value=
-        flavor: |
-          suffix=-{{date 'YYYYMMDD-HHmmss'}}
+          type=sha,prefix=2025.10-{{date 'YYMMDD'}}-
       env:
         DOCKER_METADATA_PR_HEAD_SHA: true
     - name: upload
