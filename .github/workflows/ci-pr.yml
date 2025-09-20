@@ -20,6 +20,15 @@ jobs:
         mkdir -p dist
         echo "build" >> dist/build.txt
 
+    - uses: docker/metadata-action@v5
+      with:
+        images: backbaseregistry.azurecr.io/business-usa
+        tags: |
+          type=schedule
+          type=ref,event=branch
+          type=ref,event=tag
+          type=ref,event=pr
+          
     - name: upload
       uses: actions/upload-artifact@v4
       with:
