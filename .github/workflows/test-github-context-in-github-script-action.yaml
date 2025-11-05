@@ -1,0 +1,14 @@
+on:
+  workflow_dispatch:
+
+
+jobs:
+  check-context-in-github-script-action:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump Context
+        uses: actions/github-script@v8
+        with:
+          script: |
+            console.log('Context:', context);
+            
