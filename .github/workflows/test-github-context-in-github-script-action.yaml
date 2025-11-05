@@ -11,4 +11,13 @@ jobs:
         with:
           script: |
             console.log('Context:', context);
+
+      - name: Dump Github Context in Shell
+        run: echo '${{ toJSON(github) }}'
             
+
+      - name: Dump Runner context in Shell
+        run: echo '${{ toJSON(runner) }}'
+
+      - name: Dump Job context in Shell
+        run: echo '${{ toJSON(job) }}'
