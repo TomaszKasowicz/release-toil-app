@@ -21,3 +21,7 @@ jobs:
 
       - name: Dump Job context in Shell
         run: echo '${{ toJSON(job) }}'
+
+
+      - name: Dump Env vars
+        run: printenv | sort
