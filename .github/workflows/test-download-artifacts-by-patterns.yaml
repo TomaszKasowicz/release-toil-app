@@ -14,17 +14,21 @@ jobs:
       - uses: actions/checkout@v5
       - name: compress ze file
         run: |
-          zip -r artifact.zip . -x '.git/*'
-
+          zip -r $RUNNER_TEMP/app_semver.zip . -x '.git/*'
+          
+      - name: compress ze workflows
+        run: |
+          zip -r $RUNNER_TEMP/docs_semver.zip .github/workflows
+      
       - uses: actions/upload-artifact@v5
         with:
           name: app_semver
-          path: artifact.zip
+          path: ${{runner.temp}}/app_semver.zip
 
       - uses: actions/upload-artifact@v5
         with:
           name: docs_semver
-          path: ./.github/workflows
+          path: ${{runner.temp}}/docs_semver.zip
 
   download:
     needs: upload
