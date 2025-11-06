@@ -1,0 +1,38 @@
+name: Download artifacts by patterns
+
+on:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: compress ze file
+        run: |
+          zip -r artifact.zip . -x '.git/*'
+
+      - uses: actions/upload-artifact@v5
+        with:
+          name: app_semver
+          path: artifact.zip
+
+      - uses: actions/upload-artifact@v5
+        with:
+          name: docs_semver
+          path: ./.github/workflows
+
+  download:
+    needs: upload
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v5
+        with:
+          pattern: '{docs,app}_*'
+
+      - name: list all files
+        run: find .
