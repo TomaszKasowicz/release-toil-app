@@ -37,6 +37,8 @@ jobs:
       - uses: actions/download-artifact@v5
         with:
           pattern: '{docs,app}_*'
-
+          path: foo
+          merge-multiple: true
+          
       - name: list all files
         run: find .
