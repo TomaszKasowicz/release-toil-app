@@ -1,0 +1,14 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  run-long-job:
+    runs-on: ubuntu-latest
+    steps:
+      - shell: bash
+        run: |
+          echo "Sleeping 120s"
+          sleep 120
+          echo "-----DONE"
