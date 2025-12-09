@@ -1,3 +1,4 @@
+name: Test - Dump GH Contexts
 on:
   workflow_dispatch:
 
