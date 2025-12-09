@@ -1,7 +1,7 @@
 name: Test - Dump GH Contexts
 on:
   workflow_dispatch:
-
+  push:
 
 jobs:
   check-context-in-github-script-action:
