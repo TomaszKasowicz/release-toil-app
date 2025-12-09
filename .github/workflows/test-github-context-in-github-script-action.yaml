@@ -6,15 +6,20 @@ jobs:
   check-context-in-github-script-action:
     runs-on: ubuntu-latest
     steps:
-      - name: Dump Context
+      - name: Dump Context in Github Script
         uses: actions/github-script@v8
         with:
           script: |
             console.log('Context:', context);
 
+      - name: Dump process.env in Github Script
+        uses: actions/github-script@v8
+        with:
+          script: |
+            console.log('Context:', process.env);
+            
       - name: Dump Github Context in Shell
         run: echo '${{ toJSON(github) }}'
-            
 
       - name: Dump Runner context in Shell
         run: echo '${{ toJSON(runner) }}'
