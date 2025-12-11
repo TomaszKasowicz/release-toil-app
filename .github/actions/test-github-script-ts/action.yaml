@@ -1,0 +1,11 @@
+name: Test Github Script with TS
+
+runs:
+  using: composite
+  steps:
+    - name: Run Typescript
+      uses: actions/github-script@v8
+      with:
+        script: |
+          const { default: printStuff } = await import('${{ github.action_path }}/action')
+          await printStuff()
