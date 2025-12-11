@@ -7,5 +7,5 @@ runs:
       uses: actions/github-script@v8
       with:
         script: |
-          const { default: printStuff } = await import('${{ github.action_path }}/action.ts')
+          const { default: printStuff } = await import('${{ github.action_path }}/action.mts')
           await printStuff()
