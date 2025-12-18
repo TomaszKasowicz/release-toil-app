@@ -6,3 +6,5 @@ test no concurrency 3
 
 test rebase-and-merge with merge commit
 test squash and merge a PR with merge commit from main
+
+test rebase and merge with merge commit (MAIN)
