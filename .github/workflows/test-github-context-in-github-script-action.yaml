@@ -12,7 +12,7 @@ jobs:
         uses: actions/github-script@v8
         with:
           script: |
-            console.log('Context:', context);
+            console.log('Context:', JSON.stringify(context, null, 2));
 
       - name: Dump process.env in Github Script
         uses: actions/github-script@v8
