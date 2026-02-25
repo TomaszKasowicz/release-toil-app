@@ -13,6 +13,12 @@ jobs:
           script: |
             console.log('Context:', JSON.stringify(context, null, 2));
 
+      - name: Dump Github in Github Script
+        uses: actions/github-script@v8
+        with:
+          script: |
+            console.log('Github:', JSON.stringify(github, null, 2));
+            
       - name: Dump process.env in Github Script
         uses: actions/github-script@v8
         with:
