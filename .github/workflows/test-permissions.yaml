@@ -13,6 +13,7 @@ jobs:
     steps:
       - name: Check Token Permissions
         uses: actions/github-script@v8
+        if: ${{ false }}
         with:
           script: |
             const { owner, repo } = context.repo;
@@ -34,3 +35,7 @@ jobs:
        
             console.log("Repository permissions for this token:");
             console.log(JSON.stringify(data.permissions, null, 2));
+      - name: Check API
+        run: |
+          # This outputs the headers/info from the local OIDC runtime
+          curl -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL"
