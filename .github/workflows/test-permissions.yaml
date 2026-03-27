@@ -34,6 +34,10 @@ jobs:
        
             console.log("Repository permissions for this token:");
             console.log(JSON.stringify(data.permissions, null, 2));
+
+      - name: Print env
+        run: printenv | sort
+        
       - name: Check API
         run: |
           # This outputs the headers/info from the local OIDC runtime
