@@ -1,0 +1,24 @@
+on:
+  workflow_dispatch:
+
+permissions: 
+  id-token: write
+  contents: read
+  pull-requests: read
+
+jobs:
+  test:
+    runs-on: ubuntu-slim
+    steps:
+      - name: Check Token Permissions
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const permissions = await github
+              .rest
+              .actions
+              .getGithubActionsDefaultWorkflowPermissionsRepository({ owner, repo });
+
+            console.log('PERMISSIONS');
+            console.log(JSON.stringify(permissions, null, 2);
