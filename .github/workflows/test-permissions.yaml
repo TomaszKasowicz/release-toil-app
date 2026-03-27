@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-slim
     steps:
       - name: Check Token Permissions
+        if: ${{ false }}
         uses: actions/github-script@v8
         with:
           script: |
@@ -22,3 +23,14 @@ jobs:
 
             console.log('PERMISSIONS');
             console.log(JSON.stringify(permissions, null, 2));
+
+      - name: Check Token Permissions (effective)
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+      
+            const { data } = await github.rest.repos.get({ owner, repo });
+       
+            console.log("Repository permissions for this token:");
+            console.log(JSON.stringify(data.permissions, null, 2));
