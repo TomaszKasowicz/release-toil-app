@@ -21,4 +21,4 @@ jobs:
               .getGithubActionsDefaultWorkflowPermissionsRepository({ owner, repo });
 
             console.log('PERMISSIONS');
-            console.log(JSON.stringify(permissions, null, 2);
+            console.log(JSON.stringify(permissions, null, 2));
