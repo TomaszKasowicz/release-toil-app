@@ -5,13 +5,13 @@ permissions:
   id-token: write
   contents: read
   pull-requests: read
+  actions: read
 
 jobs:
   test:
     runs-on: ubuntu-slim
     steps:
       - name: Check Token Permissions
-        if: ${{ false }}
         uses: actions/github-script@v8
         with:
           script: |
