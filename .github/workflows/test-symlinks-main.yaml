@@ -13,7 +13,7 @@ jobs:
       foo: ${{inputs.foo }}
 
 
-  # test-symlink:
-  #   uses: ./.github/workflows/test-symlinks-link.yaml
-  #   with:
-  #     foo: ${{inputs.foo }}
+  test-symlink:
+    uses: ./.github/workflows/test-symlinks-link.yaml
+    with:
+      foo: ${{inputs.foo }}
