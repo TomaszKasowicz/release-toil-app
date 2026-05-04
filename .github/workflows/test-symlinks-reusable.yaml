@@ -1,0 +1,18 @@
+on:
+  workflow_call:
+    inputs:
+      foo:
+        description: Foo
+        type: string
+        required: true
+
+jobs:
+  foo:
+    runs-on: ubuntu-slim
+    steps:
+      - name: Echo Foo
+        env:
+          FOO: ${{ inputs.foo }}
+        run: |
+          echo "Foo = ${FOO}"
+          
