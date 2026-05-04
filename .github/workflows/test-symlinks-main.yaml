@@ -1,0 +1,19 @@
+on:
+  workflow_dispatch:
+    inputs:
+      foo:
+        description: 'A test input'
+        required: false
+        default: 'default value'
+
+jobs:
+  test-direct:
+    uses: ./.github/workflows/test-symlinks-reusable.yaml
+    with:
+      foo: ${{inputs.foo }}
+
+
+  test-symlink:
+    uses: ./.github/workflows/test-symlinks-link.yaml
+    with:
+      foo: ${{inputs.foo }}
