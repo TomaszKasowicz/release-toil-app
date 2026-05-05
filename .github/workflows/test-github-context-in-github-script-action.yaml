@@ -2,6 +2,8 @@ name: Test - Dump GH Contexts
 on:
   workflow_dispatch:
   push:
+  pull_request:
+    types: synchronize
 
 jobs:
   check-context-in-github-script-action:
@@ -11,7 +13,7 @@ jobs:
         uses: actions/github-script@v8
         with:
           script: |
-            console.log('Context:', context);
+            console.log('Context:', JSON.stringify(context, null, 2));
 
       - name: Dump process.env in Github Script
         uses: actions/github-script@v8
