@@ -2,12 +2,30 @@ name: Reusable Workflow
 
 on:
   workflow_call:
+    inputs:
+      dry_run:
+        type: boolean
+        required: true
 
+env:
+  FOO: "foo"
+  BAR: "bar"
+  SOME_ENV: ${{ inputs.dry_run && 'foo' || 'bar' }}
 
 jobs:
   show-context:
     runs-on: ubuntu-latest
     steps:
+      - uses: docker/metadata-action@v5
+        with:
+          images: backbaseregistry.azurecr.io/business-usa
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=tag
+            type=ref,event=pr
+        env:
+          DOCKER_METADATA_PR_HEAD_SHA: true
       - run: printenv | sort
         shell: bash
   

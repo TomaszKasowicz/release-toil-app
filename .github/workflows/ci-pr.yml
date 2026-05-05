@@ -20,6 +20,13 @@ jobs:
         mkdir -p dist
         echo "build" >> dist/build.txt
 
+    - uses: docker/metadata-action@v5
+      with:
+        images: backbaseregistry.azurecr.io/business-usa
+        tags: |
+          type=sha,prefix=2025.10-{{date 'YYMMDD'}}-
+      env:
+        DOCKER_METADATA_PR_HEAD_SHA: true
     - name: upload
       uses: actions/upload-artifact@v4
       with:
