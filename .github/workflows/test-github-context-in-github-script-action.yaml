@@ -7,6 +7,12 @@ jobs:
   check-context-in-github-script-action:
     runs-on: ubuntu-latest
     steps:
+      - name: Dump context prototype
+        uses: actions/github-script@v8
+        with:
+          script: |
+            console.log('Context.prototype:', Object.getPrototypeOf(context));
+
       - name: Dump context repo in Github Script
         uses: actions/github-script@v8
         with:
